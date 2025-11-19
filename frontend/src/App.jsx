@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import Products from './Products';
-import ShoppingLists from './ShoppingLists';
-import { productsAPI, shoppingListsAPI } from './api';
+import Products from './Products.jsx';
+import ShoppingLists from './ShoppingLists.jsx';
+import { productsAPI, shoppingListsAPI } from './api.js';
 
 function App() {
   const [currentView, setCurrentView] = useState('home');
