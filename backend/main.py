@@ -36,3 +36,9 @@ def read_root():
 @app.get("/health")
 def health_check():
     return {"status": "ok", "database": "connected"}
+
+@app.get("/seed")
+def run_seed():
+    from seed_data import seed_database
+    seed_database()
+    return {"message": "Seed ejecutado correctamente"}
