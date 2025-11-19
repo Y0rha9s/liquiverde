@@ -1,0 +1,251 @@
+# LiquiVerde - Plataforma de Reatail Inteligente
+
+Plataforma full-stack que ayuda a los consumidores a ahorrar dinero mientras toman decisiones de compra sostenibles,
+optimizando presupuesto e impacto ambiental.
+
+## Caracteristicas Principales
+- Sistema de analisis de productos con scoring de sostenibilidad
+- Optimizacion de listas de compras mediante algoritmo de mochila Multi-Objetivo
+- Busqueda de productos por nombre o codigo de barras
+- Integracion con Open Food Facts Api para datos nutricionales
+- Calculo automatico de ahorros e impacto ambiental
+
+## Stack tecnologico
+
+### Backend
+- Python 3.11
+- FastAPi
+- PostgrestSQL 15
+- SQLAlchemy
+- DoCker
+
+### Frontend
+- React 18
+- Vite
+- Axios
+
+### APIs Externas
+- Open Food Facts API
+
+## Requisitos Previos
+- Docker Desktop instalado y en ejecucion
+- Git
+
+## Instalacion y Ejecicion
+
+### Clonal el repositorio
+```bash
+git clone 
+cd liquiverde
+```
+
+### Levantar los servicios con Docker
+```bash
+docker-compose up --build
+```
+
+esto levantara:
+-Backend en `http://localhost:8000`
+-Frontend en `http://localhost:5173`
+-PostgresSql en puerto `5432`
+
+### Acceder a la aplicacion
+- **Frontend:** http://localhost:5173
+- **Backend:** http://localhost:8000
+- **Documentacion Api (Swagger):** http://localhost:8000/docs
+
+### Poblar la base de datos con datos de ejemplo
+```bash
+docker-compose exec backend python seed_data.py
+```
+Esto creara 20 productos de ejemplo en 8 categorias diferentes
+
+## Algoritmos Implementados
+
+### 1. Sistema de Scoring de Sostenibilidad
+
+Calcula un puntaje de 0 - 100 para cada producto considerando multiples factores.
+
+**Componentes del Score**
+
+- **Nutriscore (40%):** Calidad nutricional del producto (A=100, B= 75, C=50, D=25, E=0)
+- **Ecoscore (30%):** Impacto ambiental (A=100, B=75, C=50, D=25, E=0)
+- **Precio (20%):** Accesibilidad economica (precios bajos = mayor puntaje)
+- **Certificacion Organica (10%):** Bonus por productos organicos
+
+**Formula**
+```
+Score = (0.4 * Nutriscore_points) + (0.3 * Ecoscore_points) + (0.2 * price_points) + organic_bonus 
+```
+**Implementacion:** `backend/services/scoring_service.py`
+
+**Ejemplo de uso**
+- Producto con Nutriscore A, Ecoscore B, Precio $1200, organico = score de 77.5
+
+---
+
+###2. Algoritmo de Mochila Multi-Objetivo
+
+Optimiza la seleccion de productos de una lista considerando presupuesto y multiples objetivos.
+
+**Restriccion principal:**
+- Presupuesto maximo (hard constraint)
+
+**Objetivos a maximizar:**
+- Valor nutricional
+- Sostenibilidad ambiental
+- Relacion calidad-precio
+
+**Proceso del algoritmo:**
+
+1. Calcula un score combinado para cada producto usando pesos configurable
+2. Calcula la relacion valor/precio apra cada producto
+3. Ordena productos por mejor relacion valor/precio (greedy)
+4. Selecciona productos mientras no exceda el presupuesto
+
+**Implementacion:** `backend/services/knapsack_service.py`
+
+**Ejemplo de optimizacion**
+- Entrada: 10 productos, presupuesto $30.000
+- Salida: 7 productos seleccionados, total $19.700, Ahorro $10.300 (34%)
+
+## Estructura del proyecto
+```
+liquiverde/
+├── backend/
+│   ├── database/
+│   │   ├── connection.py          # Configuración de base de datos
+│   │   └── init_db.py              # Inicialización de tablas
+│   ├── models/
+│   │   ├── product.py              # Modelo de productos
+│   │   ├── shopping_list.py        # Modelo de listas
+│   │   └── shopping_item.py        # Modelo de items
+│   ├── routes/
+│   │   ├── products.py             # Endpoints de productos
+│   │   ├── shopping_lists.py       # Endpoints de listas
+│   │   ├── search.py               # Endpoints de búsqueda
+│   │   └── optimization.py         # Endpoints de optimización
+│   ├── services/
+│   │   ├── scoring_service.py      # Lógica de scoring
+│   │   ├── knapsack_service.py     # Algoritmo de mochila
+│   │   └── openfoodfacts_service.py # Cliente API externa
+│   ├── schemas/
+│   │   ├── product_schema.py       # Validación de productos
+│   │   └── shopping_list_schema.py # Validación de listas
+│   ├── main.py                     # Aplicación FastAPI
+│   ├── seed_data.py                # Datos de ejemplo
+│   ├── requirements.txt            # Dependencias Python
+│   └── Dockerfile                  # Imagen Docker backend
+├── frontend/
+│   ├── src/
+│   │   ├── api.js                  # Cliente API
+│   │   ├── App.jsx                 # Componente principal
+│   │   ├── Products.jsx            # Vista de productos
+│   │   ├── ShoppingLists.jsx       # Vista de listas
+│   │   └── main.jsx                # Entry point
+│   ├── package.json                # Dependencias Node
+│   └── Dockerfile                  # Imagen Docker frontend
+├── docker-compose.yml              # Orquestación de servicios
+└── README.md                       # Este archivo
+```
+
+## API Endpoints
+
+### PRoductos
+- `GET /products/` - Listar todos los productos
+- `GET /products/{id}` - Obtener productos por ID
+- `POST /products/` - crear nuevo producto
+
+### Busqueda
+- `GET /search/barcode/{barcode}` - Buscar producto por codigo de barras en open food facts
+- `GET /search/products?query={text}` - Buscar productos por nombre
+
+### Lista de Compras
+- `GET /shopping-lists/` - Listar todas las listas
+- `GET /shooping-lists/{id}` - Obtener lista por ID
+- `POST /shopping-lists/` - Crear nueva lista
+- `POST /shopping-lists/{id}/items` - Agregar producto a la lista
+
+### Optimizacon
+- `POST /optimizacion/optimize` - Optimizar seleccion de productos
+    -Body: `{ product_ids: [1,2,3], budget:5000 }`
+- `POST /optimizacion/optimize-list/{id}` - Optimizar lista existente
+
+## Uso de IA Generativa
+
+Este proyecto fue desarrollado con asistencia de **Claude(Anthropic)** come herramienta de apayo al desarollo.
+
+### Asistencia proporiconada por IA:
+**Arquitectura y Estructura:**
+- Diseño de la estructura de carpeta del proyecto (backend/frontend)
+- Configuracion inciial de docker compose
+- Definicion de modelos de base de datos y relaciones
+
+**Implementacion de Algoritmo:**
+-Codigo base del algoritmo de mochila Multi-objetivo
+-Implementracion del sistema de scoring de sostenibilidad
+-Optimizacion de queries y logica de negocios
+
+**Desarrollo de codigo:**
+-Scafolding de rutas y endpoints de FastApi
+-Componentes de base React(products, shoppingLists)
+-Integracion con Open Food Facts API
+-Generacion de datos de prueba (SEED)
+
+**debuggins Y resolucion de problema:**
+-Correcion de errores de sintaxis e imports
+-Solucion de problemas de configuracion Docker
+-Ajustes en validaciones y manejo de errores
+
+### Contribucion del desarrrollador:
+
+**Desiciones tecnicas:**
+-Seleccion del stack tecnologico (React + FastApi + postgrestSQL)
+- Eleccion de funcionaldiades a implementar
+- Priorizacion entre features obligatorias y bonus
+
+**Validacion y testing:**
+- Prueba manual de todos los endpoints de la API
+- Validacion de funcionalidad en el frontend
+- Testing de optimizacion con diferentes presupuestos y productos
+
+** Compresion y Adaptacion:**
+- Analisis y comprension completa de cada algoritmo implementado
+- Austes en la logica de negocio segun necesidades
+- Correcciopn de errorees identificados durante el testing
+- Integracion coherente de todos los componentes
+
+**Documentacion**
+- Estructura y contenido de este README
+- Decisiones sobre que documentar y como presentarlo
+
+## Funcionalidades Implementadas
+
+### Obligatorias
+- Sistema de analisis de productos y sostenibilidad
+- optimizacion de listas de compras multi-criterio
+- Algoritmo de Mochila Multi-objetivo
+- sistema de Scoring de Sostenibilidad
+- Escaner de productos (busqueda por codigo de barras)
+- Generador de listas de comrpas optimizadas
+
+### Bonus implementadas
+- Calculos de ahorros de impacto ambiental
+- Docker + docker compose
+- Dashboard de estadisticas
+- Busqueda por nombre de producto
+- Integracion con Open Food Facts API
+
+## Notas de implementacion
+
+- La base de datos se inicializa automaticamente al levantar los contenedores
+- El sistema calcula automaticamente el sustainability_score al crear productos
+- La optimizacion usa pesos configurables (por defecto: 30%, 40% sostenibilidad, 30% nutricion)
+- Los datos de Open Food Facts pueden no tener todos los campos completos
+
+## Autor
+
+Desarrollado como desafio tecnico para Grupo Lagos - LiquiVerde
+
+**Tiempo de desarrollo:** 12-16 horas
+** Fecha:** Noviembre 2025

@@ -1,0 +1,38 @@
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from database.init_db import init_database
+from routes import products, shopping_lists, search, optimization
+
+app =  FastAPI(
+    title="LiquiVerde API",
+    description="API para optimizacion de compras sostenibles",
+    version="1.0.0"
+)
+
+#Configurar Cors 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Registrar rutas
+app.include_router(products.router)
+app.include_router(shopping_lists.router)
+app.include_router(search.router)
+app.include_router(optimization.router)
+
+#inicialziacion de datos
+@app.on_event("startup")
+def startup_event():
+    init_database()
+
+@app.get("/")
+def read_root():
+    return {"message": "LiquiVerde API funcionando correctamente"}
+
+@app.get("/health")
+def health_check():
+    return {"status": "ok", "database": "connected"}
