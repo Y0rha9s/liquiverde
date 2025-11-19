@@ -66,24 +66,26 @@ def optimize_shopping_list(list_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Lista no encontrada")
     
     # Obtener todos los productos de los items
-    product_ids = [item.product_id for item in shopping_list.items]
-    products = db.query(Product).filter(Product.id.in_(product_ids)).all()
-    
-    if not products:
+    items = shopping_list.items
+    if not items:
         raise HTTPException(status_code=404, detail="La lista no tiene productos")
     
     # Convertir a diccionarios
     products_dict = []
-    for p in products:
+    for item in items:
+        p = item.product
+        quantity = item.quantity
+        total_price = p.price * quantity
         products_dict.append({
             "id": p.id,
-            "name": p.name,
-            "price": p.price,
+            "name": f"{p.name} (x{quantity})",
+            "price": total_price,
             "sustainability_score": p.sustainability_score,
             "nutriscore": p.nutriscore,
             "ecoscore": p.ecoscore,
             "brand": p.brand,
-            "store": p.store
+            "store": p.store,
+            "quantity": quantity
         })
     
     # Optimizar con el presupuesto de la lista

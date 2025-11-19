@@ -60,6 +60,76 @@ docker-compose exec backend python seed_data.py
 ```
 Esto creara 20 productos de ejemplo en 8 categorias diferentes
 
+## Comandos Útiles
+
+### Iniciar el proyecto
+
+**Backend + Base de Datos (Docker):**
+```bash
+docker-compose up
+```
+
+**Frontend (Local - en otra terminal):**
+```bash
+cd frontend
+npm run dev
+```
+
+### Iniciar y reconstruir contenedores
+```bash
+docker-compose up --build
+```
+
+### Detener el proyecto
+
+**Docker:**
+```bash
+docker-compose down
+```
+
+**Frontend local:** `Ctrl + C` en la terminal donde corre
+
+### Ver logs en tiempo real
+```bash
+docker-compose logs -f backend
+```
+
+### Ejecutar seed de datos
+```bash
+docker-compose exec backend python seed_data.py
+```
+
+### Acceder a la base de datos (PostgreSQL)
+```bash
+docker-compose exec db psql -U admin -d liquiverde
+```
+
+### Limpiar contenedores y volúmenes
+```bash
+docker-compose down -v
+```
+
+### Reiniciar servicios
+```bash
+docker-compose restart backend
+```
+
+## Desarrollo Local (sin Docker)
+
+### Backend
+```bash
+cd backend
+pip install -r requirements.txt
+uvicorn main:app --reload
+```
+
+### Frontend
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
 ## Algoritmos Implementados
 
 ### 1. Sistema de Scoring de Sostenibilidad
@@ -176,31 +246,32 @@ liquiverde/
 Este proyecto fue desarrollado con asistencia de **Claude(Anthropic)** come herramienta de apayo al desarollo.
 
 ### Asistencia proporiconada por IA:
-**Arquitectura y Estructura:**
-- Diseño de la estructura de carpeta del proyecto (backend/frontend)
-- Configuracion inciial de docker compose
-- Definicion de modelos de base de datos y relaciones
 
 **Implementacion de Algoritmo:**
--Codigo base del algoritmo de mochila Multi-objetivo
--Implementracion del sistema de scoring de sostenibilidad
--Optimizacion de queries y logica de negocios
+- Codigo base del algoritmo de mochila Multi-objetivo
+- Implementracion del sistema de scoring de sostenibilidad
+- Optimizacion de queries y logica de negocios
 
 **Desarrollo de codigo:**
--Scafolding de rutas y endpoints de FastApi
--Componentes de base React(products, shoppingLists)
--Integracion con Open Food Facts API
--Generacion de datos de prueba (SEED)
+- Scafolding de rutas y endpoints de FastApi
+- Componentes de base React(products, shoppingLists)
+- Integracion con Open Food Facts API
+- Generacion de datos de prueba (SEED)
 
 **debuggins Y resolucion de problema:**
--Correcion de errores de sintaxis e imports
--Solucion de problemas de configuracion Docker
--Ajustes en validaciones y manejo de errores
+- Correcion de errores de sintaxis
+- Solucion de problemas de configuracion Docker
+- Ajustes en validaciones y manejo de errores
 
 ### Contribucion del desarrrollador:
 
+**Arquitectura y Estructura:**
+- Configuracion inciial de docker compose
+- Definicion de modelos de base de datos y relaciones
+- Diseño de la estructura de carpeta del proyecto (backend/frontend)
+
 **Desiciones tecnicas:**
--Seleccion del stack tecnologico (React + FastApi + postgrestSQL)
+- Seleccion del stack tecnologico (React + FastApi + postgrestSQL)
 - Eleccion de funcionaldiades a implementar
 - Priorizacion entre features obligatorias y bonus
 
@@ -242,6 +313,53 @@ Este proyecto fue desarrollado con asistencia de **Claude(Anthropic)** come herr
 - El sistema calcula automaticamente el sustainability_score al crear productos
 - La optimizacion usa pesos configurables (por defecto: 30%, 40% sostenibilidad, 30% nutricion)
 - Los datos de Open Food Facts pueden no tener todos los campos completos
+
+## Solución de Problemas
+
+### Windows
+
+**Error: Puerto 5432 ya en uso**
+```powershell
+# Encontrar proceso usando puerto 5432
+netstat -ano | findstr :5432
+# Matar proceso (reemplaza PID con el número que obtuviste)
+taskkill /PID  /F
+```
+
+**Error: Puerto 8000 ya en uso**
+```powershell
+netstat -ano | findstr :8000
+taskkill /PID  /F
+```
+
+**Error: Puerto 5173 ya en uso (Frontend)**
+```powershell
+netstat -ano | findstr :5173
+taskkill /PID  /F
+```
+
+### Linux/Mac
+
+**Error: Puerto ya en uso**
+```bash
+# Encontrar y matar proceso
+lsof -ti:8000 | xargs kill -9
+lsof -ti:5173 | xargs kill -9
+```
+
+**Frontend no conecta con Backend**
+- Verificar que backend esté corriendo en `http://localhost:8000`
+- Verificar que frontend esté corriendo en `http://localhost:5173`
+- Revisar CORS en `backend/main.py`
+
+**Base de datos vacía**
+```bash
+docker-compose exec backend python seed_data.py
+```
+
+**Docker no inicia**
+- Verificar que Docker Desktop esté corriendo
+- Reiniciar Docker Desktop
 
 ## Autor
 
