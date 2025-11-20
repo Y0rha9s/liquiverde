@@ -17,7 +17,7 @@ async def search_by_barcode(barcode: str):
         raise HTTPException(status_code=404, detail="Producto no encotnrado en Open Food Facts")
     return product
 
-@router.get("products")
+@router.get("/products")
 async def search_products(query: str, country: str = "chile"):
     """ Buscar productos por nombre """
     if not query or len(query) < 2:

@@ -147,6 +147,14 @@ Calcula un puntaje de 0 - 100 para cada producto considerando multiples factores
 ```
 Score = (0.4 * Nutriscore_points) + (0.3 * Ecoscore_points) + (0.2 * price_points) + organic_bonus 
 ```
+```
+savings = budget - total_price
+```
+```
+% = savings / budget * 100
+```
+
+
 **Implementacion:** `backend/services/scoring_service.py`
 
 **Ejemplo de uso**
@@ -237,9 +245,9 @@ liquiverde/
 - `POST /shopping-lists/{id}/items` - Agregar producto a la lista
 
 ### Optimizacon
-- `POST /optimizacion/optimize` - Optimizar seleccion de productos
+- `POST /optimization/optimize` - Optimizar seleccion de productos
     -Body: `{ product_ids: [1,2,3], budget:5000 }`
-- `POST /optimizacion/optimize-list/{id}` - Optimizar lista existente
+- `POST /optimization/optimize-list/{id}` - Optimizar lista existente
 
 ## Uso de IA Generativa
 
@@ -365,5 +373,5 @@ docker-compose exec backend python seed_data.py
 
 Desarrollado como desafio tecnico para Grupo Lagos - LiquiVerde
 
-**Tiempo de desarrollo:** 12-16 horas
+**Tiempo de desarrollo:** 24 horas
 ** Fecha:** Noviembre 2025
