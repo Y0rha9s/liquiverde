@@ -143,26 +143,51 @@ Calcula un puntaje de 0 - 100 para cada producto considerando multiples factores
 - **Precio (20%):** Accesibilidad economica (precios bajos = mayor puntaje)
 - **Certificacion Organica (10%):** Bonus por productos organicos
 
-**Formula**
-```
-Score = (0.4 * Nutriscore_points) + (0.3 * Ecoscore_points) + (0.2 * price_points) + organic_bonus 
-```
-```
-savings = budget - total_price
-```
-```
-% = savings / budget * 100
-```
+### Formulas
+
+**Calculo de ahorros**
+
+Definiciones:
+- Presupuesto (budget): monto máximo disponible
+- Total seleccionado (total_price): suma de los precios totales de los productos elegidos (precio × cantidad)
+
+Fórmulas:
+- Ahorro: savings = budget - total_price
+- Porcentaje de ahorro: savings_percentage = (savings / budget) × 100
+
+Ejemplo:
+- Presupuesto: $30.000
+- Selección: 2 Lechugas ($990 c/u) + 5 Aguas ($800 c/u)
+- Total seleccionado: (2 × 990) + (5 × 800) = 1.980 + 4.000 = $5.980
+- Ahorro: 30.000 - 5.980 = $24.020
+- Porcentaje: (24.020 / 30.000) × 100 ≈ 80,07%
+
+**Score combinado del algoritmo de Optimizacion***
+Variables por producto:
+- price: precio TOTAL del ítem (precio unitario × cantidad)
+- sustainability_score: puntaje de sostenibilidad (0–100)
+- nutriscore: letra nutricional (A, B, C, D, E)
+- max_price: 10.000 (tope para normalización de precio)
+- Pesos por defecto: w_price = 0.3, w_sust = 0.4, w_nut = 0.3
+
+Conversión nutricional:
+- A=100, B=75, C=50, D=25, E=0
+
+Normalización de precio:
+- price_score = (1 - (price / max_price)) × 100  si price < max_price
+- price_score = 0                               si price ≥ max_price
+
+Score combinado:
+- combined = (price_score × w_price) + (sustainability_score × w_sust) + (nutrition_score × w_nut)
+
+Relación valor/precio para ordenamiento:
+- value_ratio = combined / price
+
+Selección:
+- Se ordenan los productos por value_ratio (descendente) y se agregan mientras no se exceda el budget.
 
 
-**Implementacion:** `backend/services/scoring_service.py`
-
-**Ejemplo de uso**
-- Producto con Nutriscore A, Ecoscore B, Precio $1200, organico = score de 77.5
-
----
-
-###2. Algoritmo de Mochila Multi-Objetivo
+### 2. Algoritmo de Mochila Multi-Objetivo
 
 Optimiza la seleccion de productos de una lista considerando presupuesto y multiples objetivos.
 
