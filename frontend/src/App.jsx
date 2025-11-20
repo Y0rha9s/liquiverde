@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import Products from './Products.jsx';
 import ShoppingLists from './ShoppingLists.jsx';
 import { productsAPI, shoppingListsAPI } from './api.js';
+import Rewards from './Rewards.jsx';
 
 function App() {
   const [currentView, setCurrentView] = useState('home');
@@ -81,6 +82,20 @@ function App() {
         >
           Listas de Compras
         </button>
+        <button
+          onClick={() => setCurrentView('rewards')}
+          style={{
+            padding: '10px 20px',
+            marginLeft: '10px',
+            backgroundColor: currentView === 'rewards' ? '#4CAF50' : '#ddd',
+            color: currentView === 'rewards' ? 'white' : 'black',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer'
+          }}
+        >
+          Recompensas
+        </button>
       </nav>
 
       <main>
@@ -150,6 +165,7 @@ function App() {
 
         {currentView === 'products' && <Products />}
         {currentView === 'lists' && <ShoppingLists />}
+        {currentView === 'rewards' && <Rewards />}
       </main>
     </div>
   );

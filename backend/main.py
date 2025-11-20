@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from database.init_db import init_database
-from routes import products, shopping_lists, search, optimization
+from routes import products, shopping_lists, search, optimization, rewards
 
 app =  FastAPI(
     title="LiquiVerde API",
@@ -23,6 +23,7 @@ app.include_router(products.router)
 app.include_router(shopping_lists.router)
 app.include_router(search.router)
 app.include_router(optimization.router)
+app.include_router(rewards.router)
 
 #inicialziacion de datos
 @app.on_event("startup")
