@@ -401,16 +401,16 @@ docker-compose exec backend python seed_data.py
 ## Capturas de pantalla
 
 ### Dashboard Principal
-![Dashboard](screenshots/home.png)
+![Dashboard](img/screenshot_home.png)
 
 ### Catálogo de Productos
-![Productos](screenshots/products.png)
+![Productos](img/screenshot_products.png)
 
 ### Listas de Compras
-![Listas](screenshots/lists.png)
+![Listas](img/screenshot_list.png)
 
 ### Optimización de Lista
-![Optimización](screenshots/optimization.png)
+![Optimizacion](img/screenshot_optimization.png)
 
 ## Autor
 
