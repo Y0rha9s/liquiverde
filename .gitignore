@@ -10,6 +10,9 @@ ENV/
 build/
 dist/
 *.egg-info/
+.pytest_cache/
+htmlcov/
+.coverage
 
 # Node
 node_modules/
@@ -36,3 +39,8 @@ Thumbs.db
 *.db
 *.sqlite
 postgres_data/
+
+# Temporary files
+*.tmp
+*.bak
+*~
