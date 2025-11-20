@@ -3,6 +3,9 @@ import Products from './Products.jsx';
 import ShoppingLists from './ShoppingLists.jsx';
 import { productsAPI, shoppingListsAPI } from './api.js';
 import Rewards from './Rewards.jsx';
+import Charts from './Charts.jsx';
+import KPICards from './KPICards.jsx';
+import ParetoChart from './ParetoChart.jsx';
 
 function App() {
   const [currentView, setCurrentView] = useState('home');
@@ -160,6 +163,9 @@ function App() {
                 <li>Haz clic en "Optimizar Lista" para obtener la mejor selección</li>
               </ol>
             </div>
+            <KPICards />
+            <Charts />
+            <ParetoChart />
           </div>
         )}
 

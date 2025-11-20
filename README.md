@@ -340,6 +340,9 @@ Este proyecto fue desarrollado con asistencia de **Claude(Anthropic)** como herr
 ### Bonus implementadas
 - Cálculo de ahorros de impacto ambiental
 - Docker + docker compose
+- **PWA (Progressive Web App)** - Aplicación instalable
+- **Sistema de Recompensas** - Puntos y badges por compras sostenibles
+- **Dashboard profesional** - KPI Cards y análisis Pareto
 - Dashboard de estadísticas
 - Busqueda por nombre de producto
 - Integración con Open Food Facts API
@@ -411,6 +414,29 @@ docker-compose exec backend python seed_data.py
 
 ### Optimización de Lista
 ![Optimizacion](img/screenshot_optimization.png)
+
+### Sistema de recompensa
+![Reward](img/screenshot_reward.png)
+
+### KPI's, Métricas y Análisis
+![Metrics](img/screenshot_graphics1.png)
+
+
+### Grafico Pareto
+![Pareto](img/screenshot_graphics2.png)
+
+## Progressive Web App (PWA)
+
+LiquiVerde es una aplicación web progresiva que puede instalarse en dispositivos móviles y de escritorio.
+
+**Características:**
+- Instalable desde el navegador
+- Funciona offline con Service Worker
+- Experiencia de app nativa
+- Íconos personalizados
+
+**Para instalar:** Abre la aplicación en tu navegador y busca el ícono de instalación en la barra de direcciones.
+
 
 ## Autor
 
