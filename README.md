@@ -35,7 +35,7 @@ optimizando presupuesto e impacto ambiental.
 
 ### Clonar el repositorio
 ```bash
-git clone 
+git clone https://github.com/tuusuario/liquiverde.git
 cd liquiverde
 ```
 
@@ -417,4 +417,4 @@ docker-compose exec backend python seed_data.py
 Desarrollado como desafío técnico para Grupo Lagos - LiquiVerde
 
 **Tiempo de desarrollo:** 24 horas
-** Fecha:** Noviembre 2025
+**Fecha:** Noviembre 2025
